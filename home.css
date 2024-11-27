@@ -6,7 +6,6 @@
     --roxo-principal: #6c45d9;
     --roxo-escuro: #5030a8;
     --lilas: #f1ddff;
-
 }
 
 * {
@@ -16,18 +15,43 @@
     font-family: 'Inter', sans-serif;
 }
 
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
+body {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 20px;
+    justify-content: center;
+    height: 100vh;
+    background: url(img/bg1.jpg) no-repeat center / cover;
+    position: relative;
+}
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--roxo-principal);
+    color: var(--branco);
+    font-size: 10px;
+    padding: 15px 20px;
+    z-index: 10;
+}
+
+.janela {
+    width: 1200px;
+    height: 700px;
+    margin: 20px auto;
+    padding: 20px;
+    background: var(--branco);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .relogio {
-    width: 30%;
+    width: 90%; 
+    max-width: 500px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -36,6 +60,7 @@
     border: 7px solid var(--cinza-medio);
     border-radius: 20px;
     color: var(--cinza-escuro);
+    margin: 0 auto; 
 }
 
 .pesquisa-container {
@@ -43,11 +68,13 @@
     justify-content: center;
     align-items: center;
     gap: 10px;
-    margin: 20px 0;
+    margin: 20px auto;
     padding: 15px;
     background-color: var(--cinza-claro);
     border: 0.5px solid var(--cinza-medio);
     border-radius: 10px;
+    max-width: 800px;
+    width: 40%;
 }
 
 .pesquisa-container form {
@@ -63,14 +90,14 @@ label {
 
 input[type="date"] {
     flex: 1;
-    min-width: 0; 
+    min-width: 0;
     height: 50px;
     padding: 0 15px;
     font-size: 16px;
     font-weight: bold;
     color: var(--cinza-escuro);
     border: 0;
-    border-radius: 10px; 
+    border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
@@ -114,12 +141,12 @@ input[type="date"] {
 }
 
 .btn-novo-registro {
-    padding: 10px 20px;
+    padding: 15px 30px;
     background-color: var(--roxo-principal);
     color: var(--branco);
     border: none;
-    border-radius: 8px;
-    font-size: 16px;
+    border-radius: 10px;
+    font-size: 18px;
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.3s;
@@ -141,7 +168,6 @@ input[type="date"] {
 .tabela {
     width: 90%;
     margin: 20px auto;
-    text-align: center;
 }
 
 table {
@@ -159,8 +185,8 @@ thead {
 }
 
 thead th {
-    padding: 15px;
-    text-align: left;
+    padding: 15px 20px; 
+    text-align: left;  
 }
 
 tbody tr:nth-child(even) {
@@ -172,8 +198,8 @@ tbody tr:nth-child(odd) {
 }
 
 tbody td {
-    padding: 12px 15px;
-    text-align: left;
+    padding: 15px 20px; 
+    text-align: left;   
     color: #333;
     border-bottom: 1px solid var(--cinza-medio);
 }
@@ -182,11 +208,11 @@ tbody tr:last-child td {
     border-bottom: none;
 }
 
-/* Botão Logout */
 .btn-logout {
+    display: flex;
+    justify-content: center;
     width: 100%;
-    padding: 10px;
-    margin-top: 20px;
+    padding: 10px 20px;
     background-color: var(--cinza-claro);
     color: var(--cinza-escuro);
     border: none;
@@ -194,6 +220,9 @@ tbody tr:last-child td {
     font-size: 16px;
     font-weight: 999;
     transition: background-color 0.3s, color 0.3s;
+    width: auto;
+    max-width: 300px; 
+    margin: 20px auto; 
 }
 
 .btn-logout:hover {

@@ -1,0 +1,96 @@
+:root {
+    --branco: #fff;
+    --cinza-claro: #F0F0F0;
+    --cinza-medio: #C0C0C0;
+    --cinza-escuro: #666;
+    --roxo-principal: #6c45d9;
+    --roxo-escuro: #5030a8;
+    --lilas: #f1ddff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: url('img/bg.jpg') no-repeat center / cover;
+}
+
+.form-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    background-color: var(--cinza-claro);
+    border: 2px solid var(--cinza-medio);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--cinza-escuro);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+label {
+    font-weight: bold;
+    color: var(--cinza-escuro);
+}
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid var(--cinza-medio);
+    border-radius: 8px;
+    background-color: var(--branco);
+    color: var(--cinza-escuro);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s;
+}
+
+input:focus, select:focus {
+    box-shadow: 0 0 5px var(--roxo-principal);
+    outline: none;
+}
+
+input[type="password"] {
+    position: relative;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: var(--roxo-principal);
+    color: var(--branco);
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s,;
+}
+
+button:hover {
+    background-color: var(--roxo-escuro);
+    transform: scale(1.01);
+    color: var(--lilas);
+}
+
+#message {
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+}

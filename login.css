@@ -11,8 +11,17 @@ body {
     align-items: center;
     justify-content: center;
     height: 100vh;
-    background: url(img/background.jpg) no-repeat center / cover; 
     position: relative;
+}
+
+body.login {
+    background: url(img/bg1.jpg) no-repeat center / cover; 
+    background-size: cover;
+
+}
+body.login-adm {
+    background: url(img/bg2.jpg) no-repeat center / cover;
+    background-size: cover;
 }
 
 .camada {
@@ -36,7 +45,8 @@ body {
     z-index: 2;
 }
 
-.left {
+
+.left-func{
     display: flex;
     align-items: center;
     justify-content: center;
@@ -45,7 +55,22 @@ body {
     padding: 20px;
 }
 
-.left img {
+
+.left-adm {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    background-color:#B097F9;
+    padding: 20px;
+}
+
+.left-func img{
+    width: 80%;
+    height: auto;
+}
+
+.imagem{
     width: 80%;
     height: auto;
 }
@@ -89,6 +114,7 @@ body {
     width: 100%;
     padding: 10px;
     margin-top: 20px;
+    margin-bottom: 10px;
     background-color: #6c45d9;
     color: #fff;
     border: none;
@@ -101,4 +127,11 @@ body {
     background-color: #5030a8;
     transition: background-color 0.3s;
     transform: scale(1.01);
+}
+
+#link{
+display: block;
+text-align: center;
+color: #666;
+font-weight: 600;
 }

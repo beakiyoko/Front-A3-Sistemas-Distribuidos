@@ -8,9 +8,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-
-    <div class="container">
-            <div class="relogio"></div>
+    <header>
+        <h1>Sistema de Ponto Digital</h1>
+    </header>
+    <div class="janela">
+        <div class="relogio"></div>
 
         <div class="pesquisa-container">
             <form id="pesquisa">
@@ -28,7 +30,7 @@
             <button type="button" class="btn-novo-registro" onclick="registrarNovoHorario()">Novo Registro</button>
             <div id="registro-atual" class="registro-retorno"></div>
         </div>
-        
+
         <div class="tabela-container">
             <div class="tabela">
                 <table>
@@ -37,7 +39,7 @@
                             <th>Dia</th>
                             <th>Entrada</th>
                             <th>Saída</th>
-                            <th>Horas trabalhadas</th>
+                            <th>Horas Trabalhadas</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -69,6 +71,6 @@
             <button type="button" class="btn-logout" onclick="logout()">Logout</button>
         </div>
     </div>
-    <script src="script.js"></script>
+    <script src="home-script.js"></script>
 </body>
 </html>
