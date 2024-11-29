@@ -23,7 +23,6 @@ function pesquisar() {
     alert("Função de pesquisa chamada!");
 }
 
-// botão de novo registro
 function registrarNovoHorario() {
     const registroDiv = document.getElementById("registro-atual");    
     const agora = new Date();
@@ -35,7 +34,6 @@ function registrarNovoHorario() {
     console.log(`Novo registro feito: ${dataFormatada} às ${horaFormatada}`);
 }
 
-// botão de logout
 function logout() {
     console.log("Logout efetuado.");
     alert("Você foi deslogado.");

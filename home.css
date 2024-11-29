@@ -17,11 +17,12 @@
 
 body {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: flex-start; /* Alinha o conteúdo no topo */
+    justify-content: center; /* Centraliza horizontalmente */
     height: 100vh;
     background: url(img/bg1.jpg) no-repeat center / cover;
     position: relative;
+    padding-bottom: 20px; /* Espaço extra no final da página */
 }
 
 header {
@@ -38,15 +39,31 @@ header {
     padding: 15px 20px;
     z-index: 10;
 }
+.camada{
+    position: absolute;
+    top: 0 ;
+    left: 0 ;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(187, 187, 187, 0.3);
+    z-index: 1;
+}
 
 .janela {
-    width: 1200px;
-    height: 700px;
-    margin: 20px auto;
-    padding: 20px;
-    background: var(--branco);
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 90vw; /* 90% da largura da tela */
+    height: 85vh; /* Reduzindo a altura para evitar contato com o fim da página */
+    margin-top: 100px; /* Espaço abaixo da header */
+    padding: 30px; /* Espaço interno para o conteúdo */
+    background: var(--cinza-claro);
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 2;
+    overflow: hidden;
+    justify-content: space-between;
 }
 
 .relogio {
@@ -56,7 +73,7 @@ header {
     justify-content: center;
     align-items: center;
     font-size: 80px;
-    background-color: var(--cinza-claro);
+    background-color: var(--branco);
     border: 7px solid var(--cinza-medio);
     border-radius: 20px;
     color: var(--cinza-escuro);
@@ -70,9 +87,6 @@ header {
     gap: 10px;
     margin: 20px auto;
     padding: 15px;
-    background-color: var(--cinza-claro);
-    border: 0.5px solid var(--cinza-medio);
-    border-radius: 10px;
     max-width: 800px;
     width: 40%;
 }
@@ -97,7 +111,7 @@ input[type="date"] {
     font-weight: bold;
     color: var(--cinza-escuro);
     border: 0;
-    border-radius: 10px;
+    border-radius: 100px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
@@ -213,7 +227,7 @@ tbody tr:last-child td {
     justify-content: center;
     width: 100%;
     padding: 10px 20px;
-    background-color: var(--cinza-claro);
+    background-color: var(--branco);
     color: var(--cinza-escuro);
     border: none;
     border-radius: 25px;

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página do Administrador - Gerenciamento de Registros</title>
+    <link rel="stylesheet" href="home-adm.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>Página do Administrador - Gerenciamento de Registros</h1>
+    </header>
+
+    <div class="camada"></div>
+
+    <div class="janela">
+        <div class="tabela-container">
+            <div class="pesquisa-container">
+                <input type="text" id="pesquisa" class="campo-pesquisa" placeholder="Pesquisar..." required>
+                <button type="submit" class="btn-buscar">
+                    <svg class="icon" width="20px" height="20px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15.7955 15.8111L21 21M18 10.5C18 14.6421 14.6421 18 10.5 18C6.35786 18 3 14.6421 3 10.5C3 6.35786 6.35786 3 10.5 3C14.6421 3 18 6.35786 18 10.5Z" />
+                    </svg>
+                </button>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Data</th>
+                        <th>Entrada</th>
+                        <th>Saída</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelaResultados">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="home-adm-script.js"></script>
+</body>
+</html>
