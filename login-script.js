@@ -1,38 +1,75 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const pageType = document.body.classList.contains("login-adm") ? "admin" : "user";
-    const formId = pageType === "admin" ? "adm-form" : "login-form";
-    const usernameField = pageType === "admin" ? "adm-matricula" : "matricula";
-    const passwordField = pageType === "admin" ? "adm-senha" : "senha";
-
-    const form = document.getElementById(formId);
+    const form = document.getElementById("login-form");
 
     if (!form) return;
 
-    form.addEventListener("submit", function (event) {
+    form.addEventListener("submit", async function (event) {
         event.preventDefault();
 
-        const username = document.getElementById(usernameField).value.trim();
-        const password = document.getElementById(passwordField).value.trim();
+        const matricula = document.getElementById("matricula").value.trim();
+        const senha = document.getElementById("senha").value.trim();
 
-        // teste
-        const credentials = {
-            user: { username: "bea", password: "123" },
-            admin: { username: "beatriz", password: "12345" }
-        };
-
-        let isValid = false;
-
-        if (pageType === "admin") {
-            isValid = username === credentials.admin.username && password === credentials.admin.password;
-        } else {
-            isValid = username === credentials.user.username && password === credentials.user.password;
+        if (!matricula || !senha) {
+            displayMessage("Por favor, preencha todos os campos.", "error");
+            return;
         }
 
-        if (isValid) {
-            alert("Login bem-sucedido!");
-            window.location.href = pageType === "admin" ? "home-adm.html" : "home.html";
-        } else {
-            alert("Usuário ou senha inválido. Tente novamente.");
+        try {
+            const loginResponse = await fetch("http://145.223.74.142:48539/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ matricula, senha })
+            });
+
+            if (loginResponse.ok) {
+                const userData = await loginResponse.json();
+                displayMessage("Login bem-sucedido!", "success");
+
+                salvarDadosNoCookie(userData);
+
+                const isAdminResponse = await fetch(`http://145.223.74.142:48539/isAdmin?matricula=${matricula}`, {
+                    method: "GET"
+                });
+
+                if (isAdminResponse.ok) {
+                    const isAdmin = await isAdminResponse.json(); 
+                    const redirectPage = isAdmin ? "home-adm.html" : "home.html";
+
+                    localStorage.setItem("user", JSON.stringify(userData));
+
+                    setTimeout(() => {
+                        window.location.href = redirectPage;
+                    }, 1000);
+                } else {
+                    displayMessage("Erro ao verificar permissão do usuário.", "error");
+                }
+            } else {
+                displayMessage("Usuário ou senha inválido. Tente novamente.", "error");
+            }
+        } catch (error) {
+            console.error("Erro ao realizar login:", error);
+            displayMessage("Erro de conexão. Tente novamente mais tarde.", "error");
         }
     });
+
+    function salvarDadosNoCookie(userData) {
+        const cookieExpireTime = 3600;
+        document.cookie = `matricula=${encodeURIComponent(userData.matricula)}; path=/; max-age=${cookieExpireTime}`;
+        document.cookie = `nome=${encodeURIComponent(userData.nome)}; path=/; max-age=${cookieExpireTime}`;
+        document.cookie = `sobrenome=${encodeURIComponent(userData.sobrenome)}; path=/; max-age=${cookieExpireTime}`;
+        console.log("Dados salvos no cookie:", userData);
+    }
+
+    function displayMessage(message, type) {
+        let messageContainer = document.querySelector(".message");
+        if (!messageContainer) {
+            messageContainer = document.createElement("div");
+            messageContainer.className = "message";
+            form.appendChild(messageContainer);
+        }
+        messageContainer.textContent = message;
+        messageContainer.className = `message ${type}`;
+    }
 });

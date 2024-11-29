@@ -54,10 +54,10 @@ header {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
-    width: 90vw; /* 90% da largura da tela */
-    height: 85vh; /* Reduzindo a altura para evitar contato com o fim da página */
-    margin-top: 100px; /* Espaço abaixo da header */
-    padding: 30px; /* Espaço interno para o conteúdo */
+    width: 90vw;
+    height: 85vh; 
+    margin-top: 100px;
+    padding: 30px;
     background: var(--cinza-claro);
     border-radius: 20px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);

@@ -27,6 +27,9 @@
                 <label for="dataNascimento">Data de Nascimento</label>
                 <input type="date" id="dataNascimento" name="dataNascimento" required>
     
+                <label for="matricula">Matricula</label>
+                <input type="text" id="matricula" name="matricula" required>
+
                 <label for="cpf">CPF</label>
                 <input type="tel" id="cpf" name="cpf" minlength="11" required placeholder="Apenas números">
     
@@ -60,16 +63,36 @@
             </div>
             <table>
                 <thead>
-                    <tr> 
-                        <th>Dia</th>
+                    <tr>
+                        <th>Data</th>
                         <th>Entrada</th>
                         <th>Saída</th>
                         <th>Horas Trabalhadas</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody id="tabelaResultados">
                 </tbody>
             </table>
+            
+            <div id="popupEditar" class="popup">
+                <div class="popup-content">
+                    <h3>Editar Ponto</h3>
+                    <form id="editarForm">
+                        <label for="editarEntrada">Entrada:</label>
+                        <input type="datetime-local" id="editarEntrada" name="entrada" required>
+                
+                        <label for="editarSaida">Saída:</label>
+                        <input type="datetime-local" id="editarSaida" name="saida" required>
+                
+                        <button type="submit">Salvar</button>
+                        <button type="button" onclick="fecharPopup()">Cancelar</button>
+                    </form>
+                </div>
+            </div>
+            
+            
+            
         </div>
     </div>
 

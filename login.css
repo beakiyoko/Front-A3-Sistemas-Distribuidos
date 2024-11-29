@@ -135,3 +135,20 @@ text-align: center;
 color: #666;
 font-weight: 600;
 }
+
+input:invalid {
+    border-color: red;
+}
+
+.message {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.success {
+    color: green;
+}
+
+.error {
+    color: red;
+}

@@ -1,181 +1,213 @@
-document.getElementById('cadastroForm').addEventListener('submit', function(event) {
-    event.preventDefault();
+let pontoAtual = null;
 
-    const nome = document.getElementById('nome').value.trim();
-    const sobrenome = document.getElementById('sobrenome').value.trim();
-    const dataNascimento = document.getElementById('dataNascimento').value;
-    const cpf = document.getElementById('cpf').value.trim();
-    const cargo = document.getElementById('cargo').value;
-    const senha = document.getElementById('senha').value;
+function abrirPopupEditar(id, entrada, saida) {
+    console.log("Abrindo popup com ID:", id);
+    pontoAtual = id;
+    const popupEditar = document.querySelector(".popup");
 
-    if (!/^\d{11}$/.test(cpf)) {
-        alert('O CPF deve conter exatamente 11 dígitos e apenas números.');
-        return;
-    }
+    const entradaFormatada = entrada.replace(" ", "T").slice(0, 16);
+    const saidaFormatada = saida.replace(" ", "T").slice(0, 16);
 
-    alert(`Cadastro realizado com sucesso!\nNome: ${nome} ${sobrenome}\nCargo: ${cargo}`);
-    document.getElementById('cadastroForm').reset();
+    document.getElementById("editarEntrada").value = entradaFormatada;
+    document.getElementById("editarSaida").value = saidaFormatada;
 
-    document.getElementById('cadastroForm').reset();
-});
-
-
-function logout() {
-    console.log("Logout efetuado.");
-    alert("Você foi deslogado.");
-    window.location.href = "/adm-login.html";
+    popupEditar.classList.add("popup-open");
 }
 
+function fecharPopup() {
+    console.log("Fechando popup...");
+    pontoAtual = null;
+    const popupEditar = document.querySelector(".popup");
+    popupEditar.classList.remove("popup-open");
+}
 
+document.addEventListener("DOMContentLoaded", function () {
+    const tabelaResultados = document.getElementById("tabelaResultados");
+    const pesquisaInput = document.getElementById("pesquisa");
 
+    const popupEditar = document.createElement("div");
+    popupEditar.className = "popup";
+    popupEditar.innerHTML = `
+        <div class="popup-content">
+            <h3>Editar Registro</h3>
+            <form id="editarForm">
+                <label for="editarEntrada">Entrada:</label>
+                <input type="datetime-local" id="editarEntrada" name="entrada" required>
+                <label for="editarSaida">Saída:</label>
+                <input type="datetime-local" id="editarSaida" name="saida" required>
+                <button type="submit">Salvar</button>
+                <button type="button" onclick="fecharPopup()">Cancelar</button>
+            </form>
+        </div>
+    `;
+    document.body.appendChild(popupEditar);
 
-// ¹
-document.getElementById('pesquisa').addEventListener('input', function () {
-    const pesquisa = document.getElementById('pesquisa').value.trim();
+    document.getElementById("editarForm").addEventListener("submit", function (event) {
+        event.preventDefault();
 
-    if (pesquisa.length > 0) {
-        // Buscar dados da API (aqui simulamos com dados mock)
-        fetch(`api/funcionarios?nome=${pesquisa}`)
-            .then(response => response.json())
-            .then(data => {
-                const resultados = document.getElementById('tabelaResultados');
-                resultados.innerHTML = '';
+        const entrada = document.getElementById("editarEntrada").value;
+        const saida = document.getElementById("editarSaida").value;
 
-                if (data.length === 0) {
-                    resultados.innerHTML = '<tr><td colspan="4">Nenhum resultado encontrado.</td></tr>';
-                    return;
+        console.log("Enviando dados para edição:", {
+            id: pontoAtual,
+            horario_entrada: entrada,
+            horario_saida: saida,
+        });
+
+        fetch(`http://145.223.74.142:48539/editar-ponto`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                id: pontoAtual,
+                horario_entrada: entrada,
+                horario_saida: saida
+            })
+        })
+            .then((response) => {
+                console.log("Resposta do servidor:", response.status);
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error(`Erro ao atualizar: ${response.status}`);
                 }
-
-                data.forEach(funcionario => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${funcionario.dia}</td>
-                        <td>${funcionario.entrada}</td>
-                        <td>${funcionario.saida}</td>
-                        <td>${funcionario.horasTrabalhadas}</td>
-                    `;
-                    resultados.appendChild(tr);
-                });
             })
-            .catch(error => {
-                console.error('Erro ao buscar dados:', error);
+            .then((data) => {
+                console.log("Resposta da API:", data);
+                alert("Ponto atualizado com sucesso!");
+                fecharPopup();
+                carregarRegistros();
+            })
+            .catch((error) => {
+                console.error("Erro ao editar ponto:", error);
+                alert("Erro ao atualizar o ponto: " + error.message);
             });
-    } else {
-        // Se a pesquisa estiver vazia, limpar a tabela
-        document.getElementById('tabelaResultados').innerHTML = '';
-    }
-});
+    });
 
-function editarRegistro(id) {
-    const novoRegistro = prompt('Digite o novo registro:');
-    if (novoRegistro) {
-        fetch(`api/funcionarios/${id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ registro: novoRegistro })
-        })
-        .then(response => {
-            if (response.ok) {
-                alert('Registro atualizado com sucesso!');
-                document.getElementById('pesquisaForm').submit();
-            }
-        })
-        .catch(error => console.error('Erro ao editar registro:', error));
-    }
-}
-
-function deletarRegistro(id) {
-    if (confirm('Tem certeza que deseja deletar este registro?')) {
-        fetch(`api/funcionarios/${id}`, { method: 'DELETE' })
-        .then(response => {
-            if (response.ok) {
-                alert('Registro deletado com sucesso!');
-                document.getElementById('pesquisaForm').submit();
-            }
-        })
-        .catch(error => console.error('Erro ao deletar registro:', error));
-    }
-}
-
-
-document.addEventListener('DOMContentLoaded', function () {
-    // Função para buscar e exibir os registros na tabela
-    function carregarRegistros() {
-        // Faz uma requisição GET para buscar os registros
-        fetch('api/funcionarios')
-            .then(response => response.json())
-            .then(data => {
-                const tabelaResultados = document.getElementById('tabelaResultados');
-                tabelaResultados.innerHTML = ''; // Limpa a tabela antes de preencher
-
-                // Preenche a tabela com os dados retornados
-                data.forEach(funcionario => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${funcionario.nome}</td>
-                        <td>${funcionario.dataNascimento}</td>
-                        <td>${funcionario.registro}</td>
-                        <td>
-                            <button onclick="editarRegistro(${funcionario.id})">Editar</button>
-                            <button onclick="deletarRegistro(${funcionario.id})">Deletar</button>
-                        </td>
-                    `;
-                    tabelaResultados.appendChild(row);
-                });
+    function deletarRegistro(id) {
+        console.log("Tentando deletar registro com ID:", id);
+    
+        if (!id) {
+            console.error("ID inválido para exclusão:", id);
+            alert("Erro: ID inválido para exclusão.");
+            return;
+        }
+    
+        if (confirm("Tem certeza que deseja deletar este registro?")) {
+            fetch(`http://145.223.74.142:48539/deletar-ponto?id=${id}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                },
             })
-            .catch(error => console.error('Erro ao carregar os registros:', error));
+                .then((response) => {
+                    console.log("Resposta do servidor (DELETE):", response.status);
+                    if (response.ok) {
+                        alert("Registro deletado com sucesso!");
+                        carregarRegistros();
+                    } else {
+                        throw new Error(`Erro ao deletar: ${response.status}`);
+                    }
+                })
+                .catch((error) => {
+                    console.error("Erro ao deletar registro:", error);
+                    alert("Erro ao deletar o registro: " + error.message);
+                });
+        }
+    }
+    
+
+    function carregarTabela(data) {
+        console.log("Renderizando tabela com os dados:", data);
+        tabelaResultados.innerHTML = "";
+
+        if (data.length === 0) {
+            tabelaResultados.innerHTML =
+                '<tr><td colspan="5">Nenhum registro encontrado.</td></tr>';
+            return;
+        }
+
+        data.forEach((ponto) => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>${formatarData(ponto.horario_entrada)}</td>
+                <td>${formatarHora(ponto.horario_entrada)}</td>
+                <td>${formatarHora(ponto.horario_saida)}</td>
+                <td>${calcularHorasTrabalhadas(
+                    ponto.horario_entrada,
+                    ponto.horario_saida
+                )}</td>
+                <td>
+                    <button class="btn-editar" 
+                            onclick="abrirPopupEditar(${ponto.id}, '${ponto.horario_entrada}', '${ponto.horario_saida}')">
+                        Editar
+                    </button>
+                    <button class="btn-deletar" 
+                            data-id="${ponto.id}" 
+                            style="background: red; color: white;">
+                        Deletar
+                    </button>
+                </td>
+            `;
+            tabelaResultados.appendChild(tr);
+        });
     }
 
-    // Carregar os registros assim que a página for carregada
+    function carregarRegistros() {
+        const matricula = pesquisaInput.value.trim();
+        console.log("Carregando registros para matrícula:", matricula);
+
+        if (matricula.length > 0) {
+            fetch(`http://145.223.74.142:48539/mostrar-ponto-matricula?matricula=${matricula}`)
+                .then((response) => {
+                    console.log("Resposta do servidor (GET):", response.status);
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error("Erro ao buscar os dados. Verifique a matrícula.");
+                    }
+                })
+                .then((data) => carregarTabela(data))
+                .catch((error) => {
+                    console.error("Erro ao buscar dados:", error);
+                    tabelaResultados.innerHTML =
+                        '<tr><td colspan="5">Erro ao buscar os dados. Tente novamente mais tarde.</td></tr>';
+                });
+        } else {
+            tabelaResultados.innerHTML = "";
+        }
+    }
+
+    pesquisaInput.addEventListener("input", carregarRegistros);
+
     carregarRegistros();
 
-    // Função de pesquisa
-    document.getElementById('pesquisa').addEventListener('input', function() {
-        const query = this.value.toLowerCase();
+    function formatarData(dataISO) {
+        const date = new Date(dataISO);
+        return date.toLocaleDateString("pt-BR");
+    }
 
-        const rows = document.querySelectorAll('#tabelaResultados tr');
-        rows.forEach(row => {
-            const nome = row.querySelector('td').innerText.toLowerCase();
-            if (nome.includes(query)) {
-                row.style.display = '';
-            } else {
-                row.style.display = 'none';
-            }
-        });
-    });
+    function formatarHora(dataISO) {
+        const date = new Date(dataISO);
+        return date.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+    }
+
+    function calcularHorasTrabalhadas(entradaISO, saidaISO) {
+        const entrada = new Date(entradaISO);
+        const saida = new Date(saidaISO);
+
+        const diffMs = saida - entrada;
+        const diffHoras = Math.floor(diffMs / (1000 * 60 * 60));
+        const diffMinutos = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+
+        return `${diffHoras}h ${diffMinutos}m`;
+    }
+
+    tabelaResultados.addEventListener("click", (event) => {
+    if (event.target.classList.contains("btn-deletar")) {
+        const id = event.target.getAttribute("data-id");
+        deletarRegistro(id);
+    }
 });
-
-// Função para editar o registro
-function editarRegistro(id) {
-    const novoRegistro = prompt('Digite o novo registro:');
-    if (novoRegistro) {
-        fetch(`api/funcionarios/${id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ registro: novoRegistro })
-        })
-        .then(response => {
-            if (response.ok) {
-                alert('Registro atualizado com sucesso!');
-                // Recarregar a tabela para exibir a atualização
-                carregarRegistros();
-            }
-        })
-        .catch(error => console.error('Erro ao editar registro:', error));
-    }
-}
-
-// Função para deletar o registro
-function deletarRegistro(id) {
-    if (confirm('Tem certeza que deseja deletar este registro?')) {
-        fetch(`api/funcionarios/${id}`, { method: 'DELETE' })
-        .then(response => {
-            if (response.ok) {
-                alert('Registro deletado com sucesso!');
-                // Recarregar a tabela para remover o registro deletado
-                carregarRegistros();
-            }
-        })
-        .catch(error => console.error('Erro ao deletar registro:', error));
-    }
-}
+});
