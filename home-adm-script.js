@@ -117,17 +117,16 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
     
-
     function carregarTabela(data) {
         console.log("Renderizando tabela com os dados:", data);
+        const tabelaResultados = document.getElementById("tabelaResultados");
         tabelaResultados.innerHTML = "";
-
+    
         if (data.length === 0) {
-            tabelaResultados.innerHTML =
-                '<tr><td colspan="5">Nenhum registro encontrado.</td></tr>';
+            tabelaResultados.innerHTML = '<tr><td colspan="5">Nenhum registro encontrado.</td></tr>';
             return;
         }
-
+    
         data.forEach((ponto) => {
             const tr = document.createElement("tr");
             tr.innerHTML = `
@@ -139,15 +138,16 @@ document.addEventListener("DOMContentLoaded", function () {
                     ponto.horario_saida
                 )}</td>
                 <td>
-                    <button class="btn-editar" 
-                            onclick="abrirPopupEditar(${ponto.id}, '${ponto.horario_entrada}', '${ponto.horario_saida}')">
-                        Editar
-                    </button>
-                    <button class="btn-deletar" 
-                            data-id="${ponto.id}" 
-                            style="background: red; color: white;">
-                        Deletar
-                    </button>
+                    <div class="acoes-botoes">
+                        <button class="btn-editar" 
+                                onclick="abrirPopupEditar(${ponto.id}, '${ponto.horario_entrada}', '${ponto.horario_saida}')">
+                            Editar
+                        </button>
+                        <button class="btn-deletar" 
+                                data-id="${ponto.id}">
+                            Deletar
+                        </button>
+                    </div>
                 </td>
             `;
             tabelaResultados.appendChild(tr);
