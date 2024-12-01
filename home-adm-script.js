@@ -239,14 +239,19 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function formatarHora(dataISO) {
+        if(dataISO == null) return "- : -"
         const date = new Date(dataISO);
         return date.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
     }
 
     function calcularHorasTrabalhadas(entradaISO, saidaISO) {
         const entrada = new Date(entradaISO);
+    
+        if (!saidaISO) {
+            return "Em andamento";
+        }
+    
         const saida = new Date(saidaISO);
-
         const diffMs = saida - entrada;
         const diffHoras = Math.floor(diffMs / (1000 * 60 * 60));
         const diffMinutos = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
@@ -261,3 +266,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 });
+
+function logout() {
+    document.cookie = "matricula=; path=/; max-age=0";
+    alert("Você foi deslogado.");
+    window.location.href = "/login.html";
+}

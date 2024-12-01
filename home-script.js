@@ -76,6 +76,7 @@
     }
 
     function formatarHora(dataISO) {
+        if(dataISO == null) return "- : -"
         const date = new Date(dataISO);
         return date.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
     }
@@ -83,10 +84,12 @@
     function calcularHorasTrabalhadas(entradaISO, saidaISO) {
         const entrada = new Date(entradaISO);
         const saida = new Date(saidaISO);
-
+    
+        if(saidaISO == null) return "0h 0m"
+    
         const diffMs = saida - entrada;
         const horas = Math.floor(diffMs / (1000 * 60 * 60));
-        const minutos = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+        const minutos = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60))
 
         return `${horas}h ${minutos}m`;
     }
