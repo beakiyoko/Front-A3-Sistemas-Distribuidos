@@ -1,58 +1,58 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const form = document.getElementById("login-form");
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("login-form");
 
-    if (!form) return;
+        if (!form) return;
 
-    form.addEventListener("submit", async function (event) {
-        event.preventDefault();
+        form.addEventListener("submit", async function (event) {
+            event.preventDefault();
 
-        const matricula = document.getElementById("matricula").value.trim();
-        const senha = document.getElementById("senha").value.trim();
+            const matricula = document.getElementById("matricula").value.trim();
+            const senha = document.getElementById("senha").value.trim();
 
-        if (!matricula || !senha) {
-            displayMessage("Por favor, preencha todos os campos.", "error");
-            return;
-        }
+            if (!matricula || !senha) {
+                displayMessage("Por favor, preencha todos os campos.", "error");
+                return;
+            }
 
-        try {
-            const loginResponse = await fetch("http://145.223.74.142:48539/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ matricula, senha })
-            });
-
-            if (loginResponse.ok) {
-                const userData = await loginResponse.json();
-                displayMessage("Login bem-sucedido!", "success");
-
-                salvarDadosNoCookie(userData);
-
-                const isAdminResponse = await fetch(`http://145.223.74.142:48539/isAdmin?matricula=${matricula}`, {
-                    method: "GET"
+            try {
+                const loginResponse = await fetch("http://145.223.74.142:48539/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ matricula, senha })
                 });
 
-                if (isAdminResponse.ok) {
-                    const isAdmin = await isAdminResponse.json(); 
-                    const redirectPage = isAdmin ? "home-adm.html" : "home.html";
+                if (loginResponse.ok) {
+                    const userData = await loginResponse.json();
+                    displayMessage("Login bem-sucedido!", "success");
 
-                    localStorage.setItem("user", JSON.stringify(userData));
+                    salvarDadosNoCookie(userData);
 
-                    setTimeout(() => {
-                        window.location.href = redirectPage;
-                    }, 1000);
+                    const isAdminResponse = await fetch(`http://145.223.74.142:48539/isAdmin?matricula=${matricula}`, {
+                        method: "GET"
+                    });
+
+                    if (isAdminResponse.ok) {
+                        const isAdmin = await isAdminResponse.json(); 
+                        const redirectPage = isAdmin ? "home-adm.html" : "home.html";
+
+                        localStorage.setItem("user", JSON.stringify(userData));
+
+                        setTimeout(() => {
+                            window.location.href = redirectPage;
+                        }, 1000);
+                    } else {
+                        displayMessage("Erro ao verificar permissão do usuário.", "error");
+                    }
                 } else {
-                    displayMessage("Erro ao verificar permissão do usuário.", "error");
+                    displayMessage("Usuário ou senha inválido. Tente novamente.", "error");
                 }
-            } else {
-                displayMessage("Usuário ou senha inválido. Tente novamente.", "error");
+            } catch (error) {
+                console.error("Erro ao realizar login:", error);
+                displayMessage("Erro de conexão. Tente novamente mais tarde.", "error");
             }
-        } catch (error) {
-            console.error("Erro ao realizar login:", error);
-            displayMessage("Erro de conexão. Tente novamente mais tarde.", "error");
-        }
-    });
+        });
 
     function salvarDadosNoCookie(userData) {
         const cookieExpireTime = 3600;

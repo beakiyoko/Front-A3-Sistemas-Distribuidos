@@ -22,6 +22,56 @@ function fecharPopup() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+
+    const cadastroForm = document.getElementById("cadastroForm");
+
+    cadastroForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const nome = document.getElementById("nome").value;
+        const sobrenome = document.getElementById("sobrenome").value;
+        const dataNascimento = document.getElementById("dataNascimento").value + "T00:00:00";
+        const matricula = document.getElementById("matricula").value;
+        const cpf = document.getElementById("cpf").value;
+        const cargo = document.getElementById("cargo").value;
+        const senha = document.getElementById("senha").value;
+
+        const dadosCadastro = {
+            nome: nome,
+            sobrenome: sobrenome,
+            data_nascimento: dataNascimento,
+            matricula: matricula,
+            cpf: cpf,
+            cargo: cargo,
+            senha: senha
+        };
+
+        fetch("http://145.223.74.142:48539/cadastrar", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(dadosCadastro)
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error(`Erro no cadastro: ${response.status}`);
+                }
+            })
+            .then(data => {
+                alert("Usuário cadastrado com sucesso!");
+                cadastroForm.reset();
+                carregarRegistros();
+            })
+            .catch(error => {
+                console.error("Erro ao cadastrar usuário:", error);
+                alert("Erro ao cadastrar o usuário: " + error.message);
+            });
+    });
+
+
     const tabelaResultados = document.getElementById("tabelaResultados");
     const pesquisaInput = document.getElementById("pesquisa");
 
@@ -117,16 +167,17 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
     
+
     function carregarTabela(data) {
         console.log("Renderizando tabela com os dados:", data);
-        const tabelaResultados = document.getElementById("tabelaResultados");
         tabelaResultados.innerHTML = "";
-    
+
         if (data.length === 0) {
-            tabelaResultados.innerHTML = '<tr><td colspan="5">Nenhum registro encontrado.</td></tr>';
+            tabelaResultados.innerHTML =
+                '<tr><td colspan="5">Nenhum registro encontrado.</td></tr>';
             return;
         }
-    
+
         data.forEach((ponto) => {
             const tr = document.createElement("tr");
             tr.innerHTML = `
@@ -138,16 +189,15 @@ document.addEventListener("DOMContentLoaded", function () {
                     ponto.horario_saida
                 )}</td>
                 <td>
-                    <div class="acoes-botoes">
-                        <button class="btn-editar" 
-                                onclick="abrirPopupEditar(${ponto.id}, '${ponto.horario_entrada}', '${ponto.horario_saida}')">
-                            Editar
-                        </button>
-                        <button class="btn-deletar" 
-                                data-id="${ponto.id}">
-                            Deletar
-                        </button>
-                    </div>
+                    <button class="btn-editar" 
+                            onclick="abrirPopupEditar(${ponto.id}, '${ponto.horario_entrada}', '${ponto.horario_saida}')">
+                        Editar
+                    </button>
+                    <button class="btn-deletar" 
+                            data-id="${ponto.id}" 
+                            style="background: red; color: white;">
+                        Deletar
+                    </button>
                 </td>
             `;
             tabelaResultados.appendChild(tr);
